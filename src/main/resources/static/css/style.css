@@ -1,0 +1,730 @@
+/* =========================================================
+   Akash & Priya Wedding Website
+   Theme: Royal Minimal Indian Wedding
+   Colors: Maroon/Wine, Gold, Ivory/Cream, Dusty Rose, Dark Brown
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Yellowtail&family=Great+Vibes&family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --color-maroon: #6b0f1a;
+  --color-maroon-dark: #4a0a12;
+  --color-gold: #c9a227;
+  --color-gold-light: #e6cf7a;
+  --color-ivory: #fdf8ef;
+  --color-cream: #f8f1e2;
+  --color-dusty-rose: #d9a5a0;
+  --color-dark-brown: #3b2a20;
+  --color-midnight: #0d1b2a;
+
+  --font-script: 'Yellowtail', 'Great Vibes', cursive;
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Poppins', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-ivory);
+  color: var(--color-dark-brown);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .heading {
+  font-family: var(--font-heading);
+  color: var(--color-maroon);
+}
+
+.script-font {
+  font-family: var(--font-script);
+}
+
+a {
+  color: var(--color-maroon);
+}
+
+/* ---------- Navbar ---------- */
+.navbar-wedding {
+  background-color: rgba(253, 248, 239, 0.95);
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.navbar-wedding .navbar-brand,
+.navbar-wedding .nav-link {
+  font-family: var(--font-heading);
+  color: var(--color-maroon) !important;
+  font-weight: 600;
+}
+
+.navbar-wedding .nav-link:hover {
+  color: var(--color-gold) !important;
+}
+
+/* ---------- Section base ---------- */
+.section {
+  padding: 90px 0;
+  position: relative;
+}
+
+.section-alt {
+  background-color: var(--color-cream);
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title h2 {
+  font-size: 2.6rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: var(--color-gold);
+  margin: 12px auto 0;
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Hero Section ---------- */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  color: var(--color-ivory);
+  padding: 40px 20px;
+  background: var(--color-midnight);
+}
+
+/* Ken Burns slow zoom background layer, separate from content */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(rgba(13, 27, 42, 0.55), rgba(75, 10, 18, 0.6)),
+    url('/images/background/Phere%20Background.png') center/cover no-repeat;
+  animation: kenBurnsZoom 26s ease-in-out infinite alternate;
+}
+
+@keyframes kenBurnsZoom {
+  0%   { transform: scale(1); }
+  100% { transform: scale(1.07); }
+}
+
+/* Twinkling stars */
+.stars-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background: var(--color-gold-light);
+  border-radius: 50%;
+  animation-name: twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); box-shadow: none; }
+  50% { opacity: 1; transform: scale(1.35); box-shadow: 0 0 8px 2px rgba(230, 207, 122, 0.85); }
+
+}
+
+/* Floating flower petals */
+.petals-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Global flower shower overlay (covers the whole viewport on every page) */
+.global-petals {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1090;
+}
+
+.petal {
+  position: absolute;
+  top: -40px;
+  opacity: 0.6;
+  animation-name: petalDrift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+.global-petals .petal {
+  opacity: 0.55;
+}
+
+@keyframes petalDrift {
+  0%   { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  50%  { transform: translate(24px, 50vh) rotate(180deg); }
+  90%  { opacity: 0.5; }
+  100% { transform: translate(-16px, 110vh) rotate(360deg); opacity: 0; }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Om symbol shown as a large circular graphic behind the couple names, with soft
+   edges that fade into the dark background (radial mask), plus a gentle
+   fade/scale-in reveal and a slow continuous glow-pulse animation. */
+.mandala {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0;
+  z-index: -1;
+  background: url('/images/background/Om.png') center/contain no-repeat;
+  -webkit-mask-image: radial-gradient(circle, black 35%, transparent 72%);
+  mask-image: radial-gradient(circle, black 35%, transparent 72%);
+  animation: mandalaReveal 2s ease-out forwards, mandalaGlowPulse 4s ease-in-out 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes mandalaReveal {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to   { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes mandalaGlowPulse {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(230,207,122,0.4)); }
+  50%      { filter: drop-shadow(0 0 26px rgba(230,207,122,0.75)); }
+}
+
+/* Elegant fade + slide-up name reveal (one-time) */
+.name-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: nameFadeIn 1s ease forwards;
+}
+
+@keyframes nameFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero-section .couple-names {
+  font-family: var(--font-script);
+  font-size: 4.5rem;
+  color: var(--color-gold-light);
+  margin-bottom: 10px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.hero-section .couple-names .heart-inline {
+  font-size: 0.7em;
+  vertical-align: middle;
+}
+
+.hero-section .tagline {
+  font-size: 1.3rem;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.hero-section .invite-text {
+  max-width: 600px;
+  margin: 0 auto 30px;
+  font-size: 1.05rem;
+}
+
+.hero-section .wedding-date-badge {
+  display: inline-block;
+  border: 2px solid var(--color-gold);
+  border-radius: 50px;
+  padding: 10px 30px;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+}
+
+.btn-gold {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-maroon-dark);
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 10px 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(201, 162, 39, 0.55);
+}
+
+.btn-gold:hover {
+  background-color: var(--color-gold-light);
+  color: var(--color-maroon-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(201, 162, 39, 0.8);
+}
+
+.btn-outline-gold {
+  border: 2px solid var(--color-gold-light);
+  color: var(--color-ivory);
+  border-radius: 50px;
+  padding: 8px 26px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--color-gold-light);
+  color: var(--color-maroon-dark);
+}
+
+/* ---------- Invitation Card ---------- */
+.invitation-card {
+  background: var(--color-ivory);
+  border: 3px double var(--color-gold);
+  border-radius: 16px;
+  padding: 60px 40px;
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(107, 15, 26, 0.15);
+}
+
+.invitation-card .couple-names {
+  font-family: var(--font-script);
+  font-size: 3.2rem;
+  color: var(--color-maroon);
+  margin: 20px 0;
+}
+
+.invitation-card p {
+  font-size: 1.1rem;
+  line-height: 1.9;
+}
+
+/* ---------- Countdown ---------- */
+.countdown-section {
+  background: linear-gradient(135deg, var(--color-maroon), var(--color-maroon-dark));
+  color: var(--color-ivory);
+  text-align: center;
+}
+
+.countdown-section .section-title h2 {
+  color: var(--color-gold-light);
+}
+
+.countdown-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 35px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.countdown-ring-box {
+  position: relative;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countdown-ring {
+  width: 120px;
+  height: 120px;
+  transform: rotate(-90deg);
+}
+
+.countdown-ring .ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.15);
+  stroke-width: 6;
+}
+
+.countdown-ring .ring-progress {
+  fill: none;
+  stroke: var(--color-gold-light);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.4s ease;
+}
+
+.countdown-ring-box-active .countdown-ring .ring-progress {
+  stroke: var(--color-gold);
+  filter: drop-shadow(0 0 6px rgba(201, 162, 39, 0.7));
+}
+
+.countdown-ring-box-active .ring-center .count-value {
+  color: var(--color-gold);
+  transform: scale(1.1);
+}
+
+.ring-center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-center .count-value {
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--color-gold-light);
+  font-family: var(--font-heading);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.countdown-ring-box .count-label {
+  margin-top: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+}
+
+/* ---------- Cards (Event / Hotel / Family) ---------- */
+.wedding-card {
+  background: var(--color-ivory);
+  border: 1px solid var(--color-gold);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(59, 42, 32, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.wedding-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(59, 42, 32, 0.18);
+}
+
+.wedding-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.wedding-card .card-body {
+  padding: 22px;
+}
+
+.wedding-card .card-body h4 {
+  margin-bottom: 8px;
+}
+
+.badge-gold {
+  background-color: var(--color-gold);
+  color: var(--color-maroon-dark);
+  font-weight: 600;
+}
+
+/* ---------- Venue ---------- */
+.map-frame {
+  width: 100%;
+  height: 400px;
+  border: 3px solid var(--color-gold);
+  border-radius: 12px;
+}
+
+/* ---------- Family cards ---------- */
+.family-member-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.family-member-card img {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--color-gold);
+  margin-bottom: 15px;
+}
+
+/* ---------- Family Tree ---------- */
+.family-tree-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+  margin-top: 40px;
+}
+
+.family-tree-side {
+  flex: 1;
+  min-width: 280px;
+}
+
+.family-tree-side h4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tree-generation {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+  position: relative;
+  padding-top: 20px;
+}
+
+.tree-generation:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: var(--color-gold);
+}
+
+.tree-node {
+  background: var(--color-ivory);
+  border: 2px solid var(--color-gold);
+  border-radius: 10px;
+  padding: 10px;
+  width: 110px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.tree-node:hover {
+  background: var(--color-dusty-rose);
+  transform: scale(1.06);
+}
+
+.tree-node-couple {
+  background: var(--color-gold);
+  border: 2px solid var(--color-maroon);
+  box-shadow: 0 0 12px rgba(201, 162, 39, 0.75);
+}
+
+.tree-node-couple .tree-node-name {
+  color: var(--color-maroon);
+  font-weight: 800;
+}
+
+.tree-node-couple img {
+  border-color: var(--color-maroon);
+}
+
+.tree-node-couple:hover {
+  background: var(--color-gold);
+  transform: scale(1.08);
+}
+
+.tree-node img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--color-gold);
+  margin-bottom: 6px;
+}
+
+.tree-node .tree-node-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-maroon);
+}
+
+.tree-node-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.couple-connector {
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--color-gold);
+  align-self: center;
+  transform: translateY(-2px);
+}
+
+.couple-center-node {
+  text-align: center;
+  align-self: center;
+  padding: 0 20px;
+}
+
+.couple-center-node .heart {
+  font-size: 2rem;
+  color: var(--color-maroon);
+}
+
+/* Recursive branch layout for deeper family-tree generations */
+.tree-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.tree-children {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+  padding-top: 18px;
+  position: relative;
+  border-top: 2px solid var(--color-gold);
+}
+
+/* ---------- Gallery ---------- */
+.gallery-filter-btn {
+  border: 2px solid var(--color-gold);
+  background: transparent;
+  color: var(--color-maroon);
+  border-radius: 50px;
+  padding: 6px 20px;
+  margin: 0 5px 10px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.gallery-filter-btn.active,
+.gallery-filter-btn:hover {
+  background: var(--color-gold);
+  color: var(--color-maroon-dark);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  margin-top: 30px;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.gallery-item img:hover {
+  border-color: var(--color-gold);
+  transform: scale(1.02);
+}
+
+/* ---------- Memory Wall ---------- */
+.memory-form {
+  background: var(--color-ivory);
+  border: 2px solid var(--color-gold);
+  border-radius: 16px;
+  padding: 35px;
+  max-width: 700px;
+  margin: 0 auto 50px;
+}
+
+.memory-card {
+  border-left: 4px solid var(--color-gold);
+  background: var(--color-cream);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+.memory-card .memory-author {
+  font-weight: 600;
+  color: var(--color-maroon);
+}
+
+.memory-card .memory-relationship {
+  font-size: 0.85rem;
+  color: var(--color-dusty-rose);
+}
+
+/* ---------- Footer ---------- */
+.footer-section {
+  background: var(--color-maroon-dark);
+  color: var(--color-ivory);
+  text-align: center;
+  padding: 60px 20px 30px;
+}
+
+.footer-section .script-font {
+  font-size: 2.5rem;
+  color: var(--color-gold-light);
+}
+
+.footer-section p {
+  color: var(--color-dusty-rose);
+}
+
+/* ---------- Admin ---------- */
+.admin-wrapper {
+  max-width: 960px;
+  margin: 50px auto;
+  padding: 0 20px;
+}
+
+.admin-post-row img,
+.admin-post-row video,
+.admin-post-row audio {
+  max-width: 200px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .hero-section .couple-names {
+    font-size: 3.2rem;
+  }
+  .invitation-card .couple-names {
+    font-size: 2.4rem;
+  }
+  .section {
+    padding: 60px 0;
+  }
+}
+
+

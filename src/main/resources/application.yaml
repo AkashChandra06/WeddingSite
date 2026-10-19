@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: akash-priya-wedding
+  datasource:
+    url: jdbc:h2:file:./data/weddingdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+  h2:
+    console:
+      enabled: false
+      path: /h2-console
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+  thymeleaf:
+    cache: false
+
+server:
+  port: 8080
+
+wedding:
+  date: 2026-12-01T19:00:00
+  upload-dir: uploads
+
+google:
+  drive:
+    enabled: ${GOOGLE_DRIVE_ENABLED:false}
+    client-id: ${GOOGLE_DRIVE_CLIENT_ID:}
+    client-secret: ${GOOGLE_DRIVE_CLIENT_SECRET:}
+    refresh-token: ${GOOGLE_DRIVE_REFRESH_TOKEN:}
+    # Defaults to the shared Drive folder: https://drive.google.com/drive/folders/12c17KLRu1fp5ZoF8VYNp5NfRzpaQvtl9
+    folder-id: ${GOOGLE_DRIVE_FOLDER_ID:12c17KLRu1fp5ZoF8VYNp5NfRzpaQvtl9}
+    application-name: Akash & Priya Wedding Site
+
+admin:
+  # These defaults are placeholders only. ALWAYS set real values via the
+  # ADMIN_USERNAME / ADMIN_PASSWORD environment variables on the hosting
+  # platform before deploying — never rely on these fallback values in
+  # production, and never commit real credentials to source control.
+  username: ${ADMIN_USERNAME:changeme-admin}
+  password: ${ADMIN_PASSWORD:changeme-please-set-env-var}
+
+logging:
+  level:
+    com.akashpriya.wedding: INFO
+
+

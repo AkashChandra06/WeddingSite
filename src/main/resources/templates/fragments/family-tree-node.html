@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<!--
+  Recursive fragment: renders a family member node and, if present, its children
+  (next generation) beneath it. Works for any tree depth (grandparents -> parents ->
+  couple/siblings -> children...).
+-->
+<div th:fragment="renderNode(member)" class="tree-branch">
+  <div class="tree-node-group" th:classappend="${member.spouse != null} ? 'couple-group' : ''">
+    <div class="tree-node" role="button" tabindex="0"
+         th:classappend="${member.name == 'Akash' or member.name == 'Priya'} ? 'tree-node-couple' : ''"
+         th:attr="data-photo=${member.photo},data-name=${member.name},data-relationship=${member.relationship},data-side=${member.side},data-description=${member.description},aria-label='View details for ' + ${member.name}">
+      <img th:src="${member.photo}" th:alt="${member.name}" onerror="this.src='/images/family/photo-placeholder.svg'"/>
+      <div class="tree-node-name" th:text="${member.name}">Name</div>
+    </div>
+    <div class="couple-connector" th:if="${member.spouse != null}" aria-hidden="true">&#9901;</div>
+    <div class="tree-node" th:if="${member.spouse != null}" role="button" tabindex="0"
+         th:classappend="${member.spouse.name == 'Akash' or member.spouse.name == 'Priya'} ? 'tree-node-couple' : ''"
+         th:attr="data-photo=${member.spouse.photo},data-name=${member.spouse.name},data-relationship=${member.spouse.relationship},data-side=${member.spouse.side},data-description=${member.spouse.description},aria-label='View details for ' + ${member.spouse.name}">
+      <img th:src="${member.spouse.photo}" th:alt="${member.spouse.name}" onerror="this.src='/images/family/photo-placeholder.svg'"/>
+      <div class="tree-node-name" th:text="${member.spouse.name}">Name</div>
+    </div>
+  </div>
+  <div class="tree-children" th:if="${member.children != null and !member.children.isEmpty()}">
+    <div th:each="child : ${member.children}">
+      <div th:insert="~{fragments/family-tree-node :: renderNode(${child})}"></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+
