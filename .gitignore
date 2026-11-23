@@ -37,3 +37,9 @@ data/
 uploads/*
 !uploads/.gitkeep
 
+### IntelliJ IDEA (project-specific) ###
+.idea/
+*.iml
+
+### Logs ###
+*.log

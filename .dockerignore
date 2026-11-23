@@ -1,0 +1,13 @@
+target/
+data/
+uploads/*
+!uploads/.gitkeep
+.git/
+.idea/
+.vscode/
+out/
+*.log
+*.iml
+.mvn/wrapper/maven-wrapper.jar
+README.md
+
