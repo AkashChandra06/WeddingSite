@@ -18,10 +18,10 @@ public class HotelServiceImpl implements HotelService {
                     null, null,
                     null,
                     "Hardik Place.jpg"),
-            new Hotel(3L, "Coming Soon", "", null,
+            new Hotel(3L, "North Eye", "Sector 74, Near Grand Ajnara Heritage", null,
                     null, null,
                     null,
-                    "hotel-placeholder-3.jpg")
+                    "NorthEye.jpeg")
     );
 
     @Override
