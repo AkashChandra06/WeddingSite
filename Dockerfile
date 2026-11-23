@@ -25,7 +25,8 @@ RUN mkdir -p /app/data /app/uploads && chown -R appuser:appuser /app
 
 USER appuser
 
-ENV SERVER_PORT=8080
+# Railway/Render inject PORT at runtime; app listens on it via server.port=${PORT:8080}
+ENV PORT=8080
 EXPOSE 8080
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

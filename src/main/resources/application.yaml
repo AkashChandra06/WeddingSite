@@ -23,7 +23,7 @@ spring:
     cache: false
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 wedding:
   date: 2026-12-01T19:00:00
