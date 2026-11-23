@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="memory-card(post)" class="memory-card">
+  <p class="memory-author" th:text="${post.guestName}">Guest Name</p>
+  <p class="memory-relationship" th:text="${post.relationship}">Relationship</p>
+  <p th:text="${post.message}">Message text</p>
+  <div th:if="${post.filePath != null}">
+    <img th:if="${post.fileType == 'image'}" th:src="${post.filePath}" style="max-width: 250px; border-radius: 8px;"/>
+  </div>
+</div>
+</body>
+</html>
+

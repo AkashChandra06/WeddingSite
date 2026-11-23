@@ -1,0 +1,679 @@
+/* =========================================================
+   Akash & Priya Wedding Website — Premium Animation Layer
+   This file contains ONLY new/enhanced animation & visual-effect styles:
+   - Om opening splash screen
+   - Hero star field (enhanced)
+   - Hero flower petals (CSS-shape, hero-scoped)
+   - Premium glass countdown card
+   - Premium CTA button hover/focus states
+   - Luxury invitation reveal (cover/open)
+   - Generic scroll-reveal system (IntersectionObserver driven)
+   - Family blessings reveal + tree accessibility focus rings
+   - Event card hover reveal
+   - Polaroid-style Memory Wall cards
+   - Wedding journey progress navigation
+   - Optional music toggle button
+
+   Base/structural styles remain in style.css. This file is purely additive.
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. OM OPENING SPLASH SCREEN
+   --------------------------------------------------------- */
+.om-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0d1b2a; /* dark fallback shown instantly while the image loads */
+  overflow: hidden;
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+
+.om-splash-bg {
+  position: absolute;
+  inset: 0;
+  background: url('/images/om-background.png') center center / cover no-repeat;
+  background-color: #0d1b2a;
+}
+
+/* Subtle warm golden glow pulsing slowly behind/around the Om, never flashing */
+.om-splash-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(70vw, 70vh);
+  height: min(70vw, 70vh);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230, 207, 122, 0.35) 0%, rgba(230, 207, 122, 0.08) 45%, transparent 72%);
+  animation: omGlowPulse 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes omGlowPulse {
+  0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.96); }
+  50%      { opacity: 0.95; transform: translate(-50%, -50%) scale(1.04); }
+}
+
+/* Cinematic reveal of the Om image itself (opacity + slight scale settle) */
+.om-splash-bg {
+  opacity: 0;
+  transform: scale(1.06);
+  animation: omImageReveal 2.2s ease-out forwards;
+}
+
+@keyframes omImageReveal {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Soft golden floating particles, DOM-based, lightweight (no canvas / library) */
+.om-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.om-particle {
+  position: absolute;
+  bottom: -20px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-gold-light, #e6cf7a);
+  opacity: 0;
+  animation-name: omParticleFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes omParticleFloat {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  15%  { opacity: 0.5; }
+  50%  { opacity: 0.35; }
+  100% { transform: translateY(-70vh) translateX(var(--particle-drift, 20px)); opacity: 0; }
+}
+
+.om-splash-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  animation: omActionsReveal 1s ease-out 1.4s forwards;
+}
+
+@keyframes omActionsReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.btn-enter-celebration {
+  font-family: var(--font-heading, serif);
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  color: var(--color-gold-light, #e6cf7a);
+  background: rgba(13, 27, 42, 0.45);
+  border: 1px solid rgba(230, 207, 122, 0.65);
+  border-radius: 50px;
+  padding: 12px 38px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: box-shadow 0.3s ease, transform 0.3s ease, background 0.3s ease;
+}
+
+.btn-enter-celebration:hover,
+.btn-enter-celebration:focus-visible {
+  box-shadow: 0 0 22px rgba(230, 207, 122, 0.55);
+  background: rgba(13, 27, 42, 0.65);
+  transform: translateY(-2px);
+}
+
+.btn-skip-intro {
+  font-size: 0.85rem;
+  color: rgba(253, 248, 239, 0.75);
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 6px 10px;
+}
+
+.btn-skip-intro:hover,
+.btn-skip-intro:focus-visible {
+  color: var(--color-gold-light, #e6cf7a);
+}
+
+/* Exit transition: fade out + slight scale up, applied via JS toggling this class */
+.om-splash.om-splash-exit {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+}
+
+/* Once fully closed, remove from layout & keyboard/AT navigation */
+.om-splash.om-splash-hidden {
+  display: none;
+}
+
+/* ---------------------------------------------------------
+   2. HERO STAR FIELD (subtle, low-opacity, non-blocking)
+   --------------------------------------------------------- */
+  position: absolute;
+  background: var(--color-gold-light);
+  border-radius: 50%;
+  animation-name: heroStarTwinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  pointer-events: none;
+}
+
+@keyframes heroStarTwinkle {
+  0%, 100% { opacity: 0.15; }
+  50%      { opacity: 0.5; }
+}
+
+/* ---------------------------------------------------------
+   3. FLOWER PETALS (CSS shapes) — global full-viewport shower
+   --------------------------------------------------------- */
+.hero-petals-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Global shower: fixed overlay that floats petals over the whole page as you scroll */
+.global-petals-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1090;
+}
+
+.hero-petal {
+  position: absolute;
+  top: -30px;
+  opacity: 0;
+  pointer-events: none;
+  animation-name: heroPetalFall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform, opacity;
+}
+
+/* Rose-inspired petal: soft teardrop shape */
+.hero-petal.petal-rose {
+  background: radial-gradient(circle at 35% 30%, rgba(217, 165, 160, 0.9), rgba(217, 165, 160, 0.35) 70%);
+  border-radius: 70% 30% 60% 40% / 60% 40% 60% 40%;
+}
+
+/* Marigold-inspired petal: soft golden oval */
+.hero-petal.petal-marigold {
+  background: radial-gradient(circle at 40% 35%, rgba(230, 207, 122, 0.9), rgba(201, 162, 39, 0.35) 70%);
+  border-radius: 50% 50% 45% 55% / 55% 55% 45% 45%;
+}
+
+@keyframes heroPetalFall {
+  0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: 0.55; }
+  85%  { opacity: 0.4; }
+  100% { transform: translate(var(--petal-drift-x, 60px), 100vh) rotate(var(--petal-rotate, 220deg)); opacity: 0; }
+}
+
+/* ---------------------------------------------------------
+   4. PREMIUM GLASS COUNTDOWN
+   --------------------------------------------------------- */
+.countdown-glass {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.countdown-unit {
+  background: rgba(13, 27, 42, 0.55);
+  border: 1px solid rgba(230, 207, 122, 0.35);
+  border-radius: 16px;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 18px 14px;
+  min-width: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.countdown-digit-wrap {
+  position: relative;
+  width: 64px;
+  height: 46px;
+  overflow: hidden;
+}
+
+.countdown-digit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  font-weight: 700;
+  color: var(--color-ivory);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.countdown-digit.countdown-digit-swap {
+  animation: countdownDigitFade 0.45s ease;
+}
+
+@keyframes countdownDigitFade {
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.countdown-label {
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.75rem;
+  color: var(--color-gold-light);
+  font-weight: 600;
+}
+
+.countdown-complete-msg {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  color: var(--color-gold-light);
+  margin-top: 10px;
+}
+
+/* ---------------------------------------------------------
+   5. PREMIUM CTA BUTTONS (hero) — reuse existing .btn-gold /
+   .btn-outline-gold as base; add refined hover/focus behavior only.
+   --------------------------------------------------------- */
+.btn-gold,
+.btn-outline-gold {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.btn-gold:focus-visible,
+.btn-outline-gold:focus-visible {
+  outline: 2px solid var(--color-gold-light);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------------------------
+   6. GENERIC SCROLL-REVEAL SYSTEM (IntersectionObserver driven)
+   Elements opt-in via data-reveal="fade-up|fade-left|fade-right|scale"
+   and receive .reveal-visible once they enter the viewport (once only).
+   --------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transition: opacity 0.75s ease, transform 0.75s ease;
+  will-change: opacity, transform;
+}
+
+[data-reveal="fade-up"]    { transform: translateY(28px); }
+[data-reveal="fade-left"]  { transform: translateX(-30px); }
+[data-reveal="fade-right"] { transform: translateX(30px); }
+[data-reveal="scale"]      { transform: scale(0.94); }
+
+[data-reveal].reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stagger helper: apply data-reveal-delay="1".."6" for gentle cascading reveals */
+[data-reveal-delay="1"] { transition-delay: 0.08s; }
+[data-reveal-delay="2"] { transition-delay: 0.16s; }
+[data-reveal-delay="3"] { transition-delay: 0.24s; }
+[data-reveal-delay="4"] { transition-delay: 0.32s; }
+[data-reveal-delay="5"] { transition-delay: 0.4s; }
+[data-reveal-delay="6"] { transition-delay: 0.48s; }
+
+/* ---------------------------------------------------------
+   7. LUXURY INVITATION REVEAL
+   --------------------------------------------------------- */
+.invitation-wrapper {
+  position: relative;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.invitation-cover {
+  background: var(--color-ivory);
+  border: 2px solid var(--color-gold);
+  border-radius: 16px;
+  padding: 70px 40px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(107, 15, 26, 0.15);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.invitation-seal {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 18px;
+  border: 2px solid var(--color-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gold);
+  font-size: 1.6rem;
+}
+
+.invitation-cover-title {
+  font-size: 2.4rem;
+  color: var(--color-maroon);
+  margin: 10px 0;
+}
+
+/* Content starts visible by default (progressive enhancement: works with JS disabled).
+   JS adds .js-sealed to the wrapper on load, which hides the content behind the cover
+   until the visitor clicks "Open Invitation". */
+.invitation-content {
+  transition: opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s;
+}
+
+.invitation-wrapper.js-sealed .invitation-content {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.94);
+  pointer-events: none;
+}
+
+.invitation-wrapper.js-sealed .invitation-cover {
+  display: flex;
+  flex-direction: column;
+}
+
+.invitation-wrapper:not(.js-sealed) .invitation-cover {
+  display: none;
+}
+
+.invitation-wrapper.js-opened .invitation-cover {
+  opacity: 0;
+  transform: scale(0.96);
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.invitation-wrapper.js-opened .invitation-content {
+  position: relative;
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* Subtle gold border-draw effect once opened */
+.invitation-wrapper.js-opened .invitation-card {
+  animation: invitationBorderGlow 1.4s ease-out;
+}
+
+@keyframes invitationBorderGlow {
+  0%   { box-shadow: 0 0 0 rgba(201, 162, 39, 0); }
+  50%  { box-shadow: 0 0 26px rgba(201, 162, 39, 0.55); }
+  100% { box-shadow: 0 10px 40px rgba(107, 15, 26, 0.15); }
+}
+
+/* ---------------------------------------------------------
+   8. EVENT CARD HOVER REVEAL (desktop only; touch devices unaffected)
+   --------------------------------------------------------- */
+@media (hover: hover) and (pointer: fine) {
+  .wedding-card {
+    position: relative;
+  }
+
+  .wedding-card .event-card-img-wrap {
+    overflow: hidden;
+  }
+
+  .wedding-card .event-card-img-wrap img {
+    transition: transform 0.6s ease;
+  }
+
+  .wedding-card:hover .event-card-img-wrap img {
+    transform: scale(1.08);
+  }
+}
+
+.event-card-img-wrap {
+  position: relative;
+}
+
+.event-card-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(59, 42, 32, 0.55) 100%);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+   9. FAMILY BLESSINGS REVEAL + ACCESSIBLE TREE NODES
+   --------------------------------------------------------- */
+.family-member-card,
+.tree-node {
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.tree-node:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+
+/* Horizontal scroll fallback for very small screens instead of overlapping connectors */
+@media (max-width: 480px) {
+  .family-tree-container {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-bottom: 10px;
+  }
+}
+
+/* ---------------------------------------------------------
+   10. POLAROID-STYLE MEMORY WALL CARDS
+   --------------------------------------------------------- */
+.memory-card.polaroid {
+  background: #fffdf8;
+  border-left: none;
+  border: 1px solid rgba(201, 162, 39, 0.35);
+  box-shadow: 0 6px 18px rgba(59, 42, 32, 0.12);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .memory-card.polaroid:nth-child(odd)  { transform: rotate(-1.2deg); }
+  .memory-card.polaroid:nth-child(even) { transform: rotate(1.2deg); }
+}
+
+.memory-card.polaroid img {
+  border: 6px solid #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------------------------------------------------------
+   11. WEDDING JOURNEY PROGRESS NAVIGATION
+   --------------------------------------------------------- */
+.journey-nav {
+  position: fixed;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.journey-nav-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(201, 162, 39, 0.35);
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+.journey-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(201, 162, 39, 0.35);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.journey-dot:hover,
+.journey-dot:focus-visible {
+  background: var(--color-gold);
+  transform: scale(1.3);
+}
+
+.journey-dot.active {
+  background: var(--color-gold);
+  box-shadow: 0 0 8px rgba(201, 162, 39, 0.8);
+}
+
+.journey-dot .journey-label {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  background: var(--color-maroon-dark);
+  color: var(--color-ivory);
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.journey-dot:hover .journey-label,
+.journey-dot:focus-visible .journey-label {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .journey-nav {
+    right: 8px;
+    gap: 10px;
+  }
+  .journey-dot .journey-label {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------
+   12. OPTIONAL MUSIC TOGGLE
+   --------------------------------------------------------- */
+.music-toggle-btn {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  z-index: 1500;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(13, 27, 42, 0.75);
+  border: 1px solid rgba(230, 207, 122, 0.5);
+  color: var(--color-gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+}
+
+.music-toggle-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.music-toggle-btn:hover,
+.music-toggle-btn:focus-visible {
+  box-shadow: 0 0 16px rgba(230, 207, 122, 0.55);
+}
+
+.music-toggle-btn.playing .music-icon {
+  animation: musicIconPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes musicIconPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+
+/* ---------------------------------------------------------
+   13. REDUCED MOTION — applies across every effect above
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .om-splash,
+  .om-splash-bg,
+  .om-splash-glow,
+  .om-particle,
+  .om-splash-actions,
+  .hero-star,
+  .hero-petal,
+  .hero-bg,
+  [data-reveal],
+  .countdown-digit,
+  .invitation-cover,
+  .invitation-content,
+  .journey-dot,
+  .music-toggle-btn {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .hero-bg {
+    transform: none !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .om-particles,
+  .hero-petals-layer,
+  .global-petals-layer {
+    display: none !important;
+  }
+}
+
+
+
+

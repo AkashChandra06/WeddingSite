@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="family-card(member)" class="family-member-card">
+  <img th:src="${member.photo}" th:alt="${member.name}" onerror="this.src='/images/family/photo-placeholder.svg'"/>
+  <h5 th:text="${member.name}">Name</h5>
+  <p class="mb-1" style="color: var(--color-dusty-rose); font-weight: 600;" th:text="${member.relationship}">Relationship</p>
+  <p style="font-size: 0.9rem;" th:text="${member.description}">Short intro</p>
+</div>
+</body>
+</html>
+

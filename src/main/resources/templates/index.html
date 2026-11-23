@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akash &amp; Priya | Wedding Celebration</title>
+
+    <!-- Preload the two above-the-fold images (Om splash + moonlight hero) -->
+    <link rel="preload" as="image" th:href="@{/images/om-background.png}">
+    <link rel="preload" as="image" th:href="@{/images/couple/moonlight-phera.jpg}">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/animations.css}">
+</head>
+<body>
+
+<!-- ===================== OM OPENING SPLASH ===================== -->
+<!-- Full-screen intro. Decorative layers are aria-hidden; the actions are real buttons. -->
+<div id="omSplash" class="om-splash" role="dialog" aria-label="Welcome to Akash and Priya's wedding celebration">
+    <div class="om-splash-bg" aria-hidden="true"></div>
+    <div class="om-splash-glow" aria-hidden="true"></div>
+    <div class="om-particles" aria-hidden="true"></div>
+    <div class="om-splash-actions">
+        <button type="button" id="enterCelebrationBtn" class="btn-enter-celebration">Enter Celebration</button>
+        <button type="button" id="skipIntroBtn" class="btn-skip-intro" aria-label="Skip introduction and go to the main page">Skip intro</button>
+    </div>
+</div>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<!-- ===================== 1. HERO (Moonlight Phera) ===================== -->
+<section id="hero" class="hero-section">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-om" aria-hidden="true"></div>
+    <div class="stars-container" id="starsContainer" aria-hidden="true"></div>
+    <div class="hero-content">
+        <h1 class="couple-names name-reveal">Akash <span class="heart-inline">&#10084;&#65039;</span> Priya</h1>
+        <p class="tagline name-reveal" style="animation-delay:0.5s;">Two hearts, one journey, forever begins here.</p>
+        <p class="invite-text name-reveal" style="animation-delay:0.7s;">Together with our families, we invite you to celebrate our wedding.</p>
+        <div class="wedding-date-badge name-reveal" style="animation-delay:0.9s;" th:if="${weddingDateDisplay != null}">
+            <span th:text="${#temporals.format(weddingDateDisplay, 'dd MMMM yyyy')}">01 December 2026</span>
+        </div>
+        <div class="name-reveal" style="animation-delay:1.1s;">
+            <a href="#invitation" class="btn btn-gold m-1">View Invitation</a>
+            <a href="#events" class="btn btn-outline-gold m-1">Explore Celebration</a>
+        </div>
+        <a href="#invitation" class="hero-scroll-indicator name-reveal" style="animation-delay:1.3s;" aria-label="Scroll to explore">
+            <span aria-hidden="true">&#8595;</span>
+        </a>
+    </div>
+</section>
+
+<!-- ===================== 2. INVITATION (luxury reveal) ===================== -->
+<section id="invitation" class="section">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Wedding Invitation</h2>
+        </div>
+
+        <div id="invitationWrapper" class="invitation-wrapper" data-reveal="fade-up">
+            <!-- Cover (shown only when JS seals the card) -->
+            <div class="invitation-cover">
+                <div class="invitation-seal" aria-hidden="true">&#10022;</div>
+                <p>You are warmly invited</p>
+                <h3 class="invitation-cover-title">Akash &amp; Priya</h3>
+                <button type="button" id="openInvitationBtn" class="btn btn-gold mt-3">Open Invitation</button>
+            </div>
+
+            <!-- Actual invitation content: real, selectable text; visible if JS is disabled -->
+            <div class="invitation-content">
+                <div class="invitation-card">
+                    <p>With the blessings of our families,<br>we cordially invite you to the wedding ceremony of</p>
+                    <h2 class="couple-names">Akash &amp; Priya</h2>
+                    <p th:if="${weddingDateDisplay != null}">
+                        <strong th:text="${#temporals.format(weddingDateDisplay, 'dd MMMM yyyy')}">01 December 2026</strong>
+                    </p>
+                    <p>Your presence and blessings will make our celebration complete.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 3. COUNTDOWN (premium glass) ===================== -->
+<section id="countdown" class="section countdown-section">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Counting Down To The Big Day</h2>
+        </div>
+
+        <div id="countdownTimer" th:attr="data-wedding-date=${weddingDateIso}" class="countdown-glass" data-reveal="scale">
+            <div class="countdown-unit">
+                <div class="countdown-digit-wrap"><span class="countdown-digit" id="cd-days">00</span></div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-digit-wrap"><span class="countdown-digit" id="cd-hours">00</span></div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-digit-wrap"><span class="countdown-digit" id="cd-minutes">00</span></div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-unit">
+                <div class="countdown-digit-wrap"><span class="countdown-digit" id="cd-seconds">00</span></div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+        <p id="countdownComplete" class="countdown-complete-msg" hidden></p>
+    </div>
+</section>
+
+<!-- ===================== 4. EVENT SCHEDULE ===================== -->
+<section id="events" class="section section-alt">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Event Schedule</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" th:each="event, iter : ${events}"
+                 data-reveal="fade-up" th:attr="data-reveal-delay=${iter.index % 4 + 1}">
+                <div th:replace="~{fragments/event-card :: event-card(${event})}"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 5. VENUE ===================== -->
+<section id="venue" class="section">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Venue Location</h2>
+        </div>
+
+        <h3 class="text-center mb-4" style="color: var(--color-dusty-rose);">Engagement Ceremony</h3>
+        <div class="row align-items-center g-4 mb-5">
+            <div class="col-md-5" data-reveal="fade-right">
+                <h4>Adiraa 52</h4>
+                <p><strong>Address:</strong> Adiraa 52, Near Noida Sector 52 Metro</p>
+                <p><strong>Parking:</strong> Valet parking available on-site.</p>
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    <a href="https://maps.google.com/?q=Adiraa+52+Noida+Sector+52+Metro" target="_blank" class="btn btn-gold">Open in Google Maps</a>
+                    <button type="button" class="btn btn-outline-gold" style="color: var(--color-maroon); border-color: var(--color-gold);"
+                            onclick="navigator.clipboard.writeText('Adiraa 52, Noida Sector 52 Metro'); this.textContent='Address Copied!'">
+                        Copy Address
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-7" data-reveal="fade-left">
+                <iframe class="map-frame" title="Map to Adiraa 52 engagement venue"
+                        src="https://www.google.com/maps?q=Adiraa+52+Noida+Sector+52+Metro&output=embed"
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <h3 class="text-center mb-4" style="color: var(--color-dusty-rose);">Wedding Ceremony</h3>
+        <div class="row align-items-center g-4 mb-5">
+            <div class="col-md-5" data-reveal="fade-right">
+                <h4>Adiraa, Botanical Garden Metro</h4>
+                <p><strong>Address:</strong> The Adiraa, Near Botanical Garden Metro Station, Noida</p>
+                <p><strong>Parking:</strong> Complimentary valet parking available on-site.</p>
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    <a href="https://maps.google.com/?q=Adiraa+Botanical+Garden+Metro" target="_blank" class="btn btn-gold">Open in Google Maps</a>
+                    <button type="button" class="btn btn-outline-gold" style="color: var(--color-maroon); border-color: var(--color-gold);"
+                            onclick="navigator.clipboard.writeText('Adiraa, Near Botanical Garden Metro Station, Noida'); this.textContent='Address Copied!'">
+                        Copy Address
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-7" data-reveal="fade-left">
+                <iframe class="map-frame" title="Map to Adiraa wedding venue near Botanical Garden Metro"
+                        src="https://www.google.com/maps?q=Botanical+Garden+Metro+Station+Noida&output=embed"
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <h3 class="text-center mb-4" style="color: var(--color-dusty-rose);">Reception</h3>
+        <div class="row align-items-center g-4">
+            <div class="col-md-5" data-reveal="fade-right">
+                <h4>Kingship by Kahlon</h4>
+                <p><strong>Address:</strong> Vrindavan Society, Lucknow</p>
+                <p><strong>Date:</strong> 2 December 2026 &nbsp;|&nbsp; <strong>Time:</strong> 7:00 PM</p>
+                <p><strong>Parking:</strong> Ample parking available on-site.</p>
+                <div class="d-flex gap-2 flex-wrap mt-3">
+                    <a href="https://maps.google.com/?q=Kingship+by+Kahlon+Vrindavan+Society+Lucknow" target="_blank" class="btn btn-gold">Open in Google Maps</a>
+                    <button type="button" class="btn btn-outline-gold" style="color: var(--color-maroon); border-color: var(--color-gold);"
+                            onclick="navigator.clipboard.writeText('Kingship by Kahlon, Vrindavan Society, Lucknow'); this.textContent='Address Copied!'">
+                        Copy Address
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-7" data-reveal="fade-left">
+                <iframe class="map-frame" title="Map to Kingship by Kahlon reception venue"
+                        src="https://www.google.com/maps?q=Kingship+by+Kahlon+Vrindavan+Society+Lucknow&output=embed"
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- ===================== 6. HOTEL INFORMATION ===================== -->
+<section id="stay" class="section section-alt">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Hotel Information</h2>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4" th:each="hotel, iter : ${hotels}"
+                 data-reveal="fade-up" th:attr="data-reveal-delay=${iter.index % 3 + 1}">
+                <div class="wedding-card">
+                    <div class="event-card-img-wrap">
+                        <img th:src="@{'/images/events/' + ${hotel.imageName}}" th:alt="${hotel.name}" loading="lazy"
+                             onerror="this.src='https://placehold.co/400x250/c9a227/3b2a20?text=Hotel'"/>
+                    </div>
+                    <div class="card-body">
+                        <h4 th:text="${hotel.name}">Hotel Name</h4>
+                        <p class="mb-1" th:text="${hotel.address}">Address</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 7. FAMILY INTRODUCTION (Our Greatest Blessings) ===================== -->
+<section id="family" class="section">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Our Greatest Blessings</h2>
+        </div>
+        <h3 class="text-center mb-4" style="color: var(--color-dusty-rose);">Akash's Family</h3>
+        <div class="row g-3 mb-5">
+            <div th:each="member, iter : ${akashFamilyIntro}" class="col-6 col-md-4 col-lg-3"
+                 data-reveal="scale" th:attr="data-reveal-delay=${iter.index % 4 + 1}">
+                <div th:replace="~{fragments/family-card :: family-card(${member})}"></div>
+            </div>
+        </div>
+        <h3 class="text-center mb-4" style="color: var(--color-dusty-rose);">Priya's Family</h3>
+        <div class="row g-3">
+            <div th:each="member, iter : ${priyaFamilyIntro}" class="col-6 col-md-4 col-lg-3"
+                 data-reveal="scale" th:attr="data-reveal-delay=${iter.index % 4 + 1}">
+                <div th:replace="~{fragments/family-card :: family-card(${member})}"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 8. INTERACTIVE FAMILY TREE ===================== -->
+<section id="family-tree" class="section section-alt">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Our Family Tree</h2>
+            <p class="text-muted">Select any family member to learn more about them.</p>
+        </div>
+        <div class="family-tree-container" data-reveal="fade-up">
+            <div class="family-tree-side">
+                <h4>Akash's Family</h4>
+                <div th:each="root : ${akashFamilyTree}">
+                    <div th:insert="~{fragments/family-tree-node :: renderNode(${root})}"></div>
+                </div>
+            </div>
+            <div class="couple-center-node">
+                <div class="heart" aria-hidden="true">&#10084;&#65039;</div>
+                <p class="script-font" style="font-size: 1.8rem; color: var(--color-maroon);">Akash &amp; Priya</p>
+            </div>
+            <div class="family-tree-side">
+                <h4>Priya's Family</h4>
+                <div th:each="root : ${priyaFamilyTree}">
+                    <div th:insert="~{fragments/family-tree-node :: renderNode(${root})}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Family member modal (populated via JS on tree node activation) -->
+<div class="modal fade" id="familyMemberModal" tabindex="-1" aria-labelledby="familyModalName" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 2px solid var(--color-gold); border-radius: 14px;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--color-gold);">
+                <h5 class="modal-title" id="familyModalName">Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close family member details"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="familyModalPhoto" src="" alt="Family member photo" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid var(--color-gold); margin-bottom: 15px;">
+                <p class="mb-1"><strong>Relationship:</strong> <span id="familyModalRelationship"></span></p>
+                <p class="mb-1"><strong>Side:</strong> <span id="familyModalSide"></span></p>
+                <p id="familyModalDescription"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== 9. PHOTO GALLERY ===================== -->
+<!-- TODO: Gallery section temporarily hidden, re-enable later -->
+<section id="gallery" class="section" style="display:none;">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Photo Gallery / Our Moments</h2>
+        </div>
+        <div class="text-center" data-reveal="fade-up">
+            <button class="gallery-filter-btn active" data-category="all">All</button>
+            <button class="gallery-filter-btn" data-category="Our Story">Our Story</button>
+            <button class="gallery-filter-btn" data-category="Family">Family</button>
+            <button class="gallery-filter-btn" data-category="Wedding Moments">Wedding Moments</button>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item" th:each="img : ${galleryImages}" th:attr="data-category=${img.category}"
+                 data-reveal="fade-up">
+                <img th:src="${img.imagePath}" th:alt="${img.caption}" th:attr="data-caption=${img.caption}" loading="lazy"
+                     onerror="this.src='https://placehold.co/400x300/6b0f1a/f8f1e2?text=Photo'"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery lightbox modal -->
+<div class="modal fade" id="galleryLightboxModal" tabindex="-1" aria-label="Enlarged photo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="background: transparent; border: none;">
+            <img id="lightboxImage" src="" alt="Enlarged gallery photo" style="width: 100%; border-radius: 10px;">
+            <p id="lightboxCaption" class="text-center mt-2" style="color: var(--color-ivory);"></p>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== 10. MEMORY WALL ===================== -->
+<!-- TODO: Memory Wall section temporarily hidden, re-enable later -->
+<section id="memory-wall" class="section section-alt" style="display:none;">
+    <div class="container">
+        <div class="section-title" data-reveal="fade-up">
+            <h2>Memory Wall</h2>
+            <p class="text-muted">Leave your wishes and photos for Akash &amp; Priya.</p>
+        </div>
+
+        <div th:if="${memorySuccess}" class="alert alert-success memory-form" th:text="${memorySuccess}"></div>
+        <div th:if="${memoryError}" class="alert alert-danger memory-form" th:text="${memoryError}"></div>
+
+        <form class="memory-form" data-reveal="fade-up" th:action="@{/memory-wall/submit}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="mw-guestName">Guest Name</label>
+                <input type="text" class="form-control" id="mw-guestName" name="guestName" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="mw-relationship">Relationship</label>
+                <input type="text" class="form-control" id="mw-relationship" name="relationship" placeholder="e.g. College Friend">
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="mw-message">Message</label>
+                <textarea class="form-control" id="mw-message" name="message" rows="4" required></textarea>
+            </div>
+            <div class="mb-3" style="display:none;"> <!-- TODO: file upload temporarily hidden, re-enable later -->
+                <label class="form-label" for="mw-file">Upload Photo (optional, max 10MB)</label>
+                <input type="file" class="form-control" id="mw-file" name="file" accept="image/jpeg,image/png,image/webp">
+            </div>
+            <button type="submit" class="btn btn-gold w-100">Submit Memory</button>
+        </form>
+
+        <div class="row">
+            <div class="col-md-6" th:each="post : ${memoryPosts}">
+                <div th:replace="~{fragments/memory-card :: memory-card(${post})}"></div>
+            </div>
+            <p class="text-center text-muted" th:if="${#lists.isEmpty(memoryPosts)}">No memories yet. Be the first to share!</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===================== 11. FOOTER ===================== -->
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+
+<!-- ===================== OPTIONAL MUSIC (only if the audio file exists) ===================== -->
+<th:block th:if="${musicAvailable}">
+    <audio id="bgMusic" th:src="@{/audio/wedding-instrumental.mp3}" loop preload="none"></audio>
+    <button type="button" id="musicToggle" class="music-toggle-btn" aria-pressed="false" aria-label="Play music">
+        <span class="music-icon" aria-hidden="true">&#9834;</span>
+    </button>
+</th:block>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/intro.js}" defer></script>
+<script th:src="@{/js/animations.js}" defer></script>
+<script th:src="@{/js/countdown.js}" defer></script>
+<script th:src="@{/js/family-tree.js}" defer></script>
+<script th:src="@{/js/gallery.js}" defer></script>
+</body>
+</html>
+
