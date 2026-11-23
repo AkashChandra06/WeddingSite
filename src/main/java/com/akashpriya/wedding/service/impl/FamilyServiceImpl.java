@@ -26,11 +26,45 @@ public class FamilyServiceImpl implements FamilyService {
         List<FamilyMember> members = new ArrayList<>();
 
         // ---------- Akash's side ----------
+        // Generation 0: Nagesh Kumar's parents (grandparents of the groom)
+        members.add(new FamilyMember(12L, "Late Shree Shankar Prasad G", "Grandfather of the Groom (Nagesh Kumar's Father)",
+                AppConstants.SIDE_AKASH, 0, "/images/family/akash-grandfather-paternal.jpg",
+                "Fondly remembered patriarch of the family.", null));
+        members.add(new FamilyMember(13L, "Late Shrimati Chandrawati Devi", "Grandmother of the Groom (Nagesh Kumar's Mother)",
+                AppConstants.SIDE_AKASH, 0, "/images/family/akash-grandmother-paternal.jpg",
+                "Fondly remembered matriarch of the family.", null, 12L));
+
         // Generation 1: Parents (root node is Nagesh Kumar; Poonam is his spouse, rendered beside him)
         members.add(new FamilyMember(1L, "Nagesh Kumar", "Father of the Groom", AppConstants.SIDE_AKASH, 1,
-                "/images/family/akash-father.jpg", "A dedicated and loving father, pillar of the family.", null));
+                "/images/family/akash-father.jpg", "A dedicated and loving father, pillar of the family.", 12L));
         members.add(new FamilyMember(2L, "Poonam", "Mother of the Groom", AppConstants.SIDE_AKASH, 1,
                 "/images/family/akash-mother.jpg", "The heart of the family, known for her warmth.", null, 1L));
+
+        // Generation 0: Poonam's parents (grandparents of the groom, maternal side) - rendered as a
+        // separate root branch since Poonam herself is already shown attached to Nagesh Kumar above.
+        members.add(new FamilyMember(14L, "Late Prem Ranjan G", "Grandfather of the Groom (Poonam's Father)",
+                AppConstants.SIDE_AKASH, 0, "/images/family/akash-grandfather-maternal.jpg",
+                "Fondly remembered grandfather on the maternal side.", null));
+        members.add(new FamilyMember(15L, "Jamwanti Devi", "Grandmother of the Groom (Poonam's Mother)",
+                AppConstants.SIDE_AKASH, 0, "/images/family/akash-grandmother-maternal.jpg",
+                "A loving grandmother on the maternal side.", null, 14L));
+
+        // Generation 1: Poonam's siblings (maternal uncles & aunt of the groom)
+        members.add(new FamilyMember(16L, "Rajeev", "Maternal Uncle of the Groom (Poonam's Brother)",
+                AppConstants.SIDE_AKASH, 1, "/images/family/akash-maternal-uncle-rajeev.jpg",
+                "Poonam's brother.", 14L));
+        members.add(new FamilyMember(17L, "Ratan", "Maternal Uncle of the Groom (Poonam's Brother)",
+                AppConstants.SIDE_AKASH, 1, "/images/family/akash-maternal-uncle-ratan.jpg",
+                "Poonam's brother.", 14L));
+        members.add(new FamilyMember(18L, "Sanjaya", "Maternal Uncle of the Groom (Poonam's Brother)",
+                AppConstants.SIDE_AKASH, 1, "/images/family/akash-maternal-uncle-sanjaya.jpg",
+                "Poonam's brother.", 14L));
+        members.add(new FamilyMember(19L, "Manish", "Maternal Uncle of the Groom (Poonam's Brother)",
+                AppConstants.SIDE_AKASH, 1, "/images/family/akash-maternal-uncle-manish.jpg",
+                "Poonam's brother.", 14L));
+        members.add(new FamilyMember(20L, "Prity", "Maternal Aunt of the Groom (Poonam's Sister)",
+                AppConstants.SIDE_AKASH, 1, "/images/family/akash-maternal-aunt-prity.jpg",
+                "Poonam's sister.", 14L));
 
         // Generation 2: Elder brother & groom (children of Nagesh Kumar, id 1) - Anurag first so
         // Akash renders to his right.
@@ -46,9 +80,14 @@ public class FamilyServiceImpl implements FamilyService {
                 "/images/family/akash-nephew.jpg", "The little bundle of joy in the family.", 4L));
 
         // ---------- Priya's side ----------
+        // Generation 0: Sunil Kumar's father (grandfather of the bride)
+        members.add(new FamilyMember(21L, "Late Shree Fakeeralal Kumar", "Grandfather of the Bride (Sunil Kumar's Father)",
+                AppConstants.SIDE_PRIYA, 0, "/images/family/priya-grandfather-paternal.jpg",
+                "Fondly remembered patriarch of the family.", null));
+
         // Generation 1: Parents (root node is Sunil Kumar; Aarti Devi is his spouse, rendered beside him)
         members.add(new FamilyMember(7L, "Sunil Kumar", "Father of the Bride", AppConstants.SIDE_PRIYA, 1,
-                "/images/family/priya-father.jpg", "A gentle and wise father figure.", null));
+                "/images/family/priya-father.jpg", "A gentle and wise father figure.", 21L));
         members.add(new FamilyMember(8L, "Aarti Devi", "Mother of the Bride", AppConstants.SIDE_PRIYA, 1,
                 "/images/family/priya-mother.jpg", "A loving homemaker and the heart of the family.", null, 7L));
 
