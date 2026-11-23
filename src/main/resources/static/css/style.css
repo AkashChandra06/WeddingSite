@@ -491,8 +491,10 @@ a {
 }
 
 .family-tree-side {
-  flex: 1;
-  min-width: 280px;
+  flex: 0 1 auto;
+  min-width: min-content;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .family-tree-side h4 {
