@@ -9,14 +9,22 @@ using `railway.json`. Follow these steps to get it live.
 3. Railway detects `railway.json` and builds using the Dockerfile automatically.
 
 ## 2. Add a persistent Volume
-The app stores its H2 database file under `./data` and uploaded photos under
-`./uploads`. Both must survive restarts/redeploys.
+The app stores its H2 database file and uploaded photos under a single base
+directory so **one** Railway volume covers both.
 
-1. In the Railway project, open the service → **Volumes** tab → **New Volume**.
-2. Mount path: `/app/data` (create a second volume for `/app/uploads`, or mount
-   a single volume at `/app` parent if Railway's plan allows multiple mount
-   points — otherwise create two separate volumes).
-3. Redeploy after attaching volumes so the app writes into the mounted paths.
+1. Click the **WeddingSite** service card → open its **Settings** tab.
+2. Scroll to the **Volumes** section → click **+ New Volume**.
+3. Set **Mount Path** to: `/app/data`
+4. Click **Add**. Railway redeploys the service automatically with the volume
+   attached.
+
+With this single mount, the H2 DB file (default `./data/weddingdb`, which
+resolves to `/app/data/weddingdb` since the container's working directory is
+`/app`) is already covered. To make uploaded photos persist too, add one more
+environment variable in step 3 below: `UPLOAD_DIR=/app/data/uploads` — this
+nests uploads inside the same mounted volume instead of the default
+`uploads` folder (which lives outside the volume and would be wiped on
+redeploy).
 
 ## 3. Set environment variables
 In the service **Variables** tab, add:
@@ -26,6 +34,7 @@ In the service **Variables** tab, add:
 | `ADMIN_USERNAME` | your chosen admin login |
 | `ADMIN_PASSWORD` | a strong password (never commit this) |
 | `GOOGLE_DRIVE_ENABLED` | `false` (Drive integration not needed yet) |
+| `UPLOAD_DIR` | `/app/data/uploads` (keeps uploads inside the mounted volume) |
 
 Railway automatically injects `PORT`; the app already reads it via
 `server.port=${PORT:8080}` in `application.yaml`, so no manual port config is

@@ -20,8 +20,9 @@ RUN useradd -ms /bin/bash appuser
 
 COPY --from=build /build/target/akash-priya-wedding.jar app.jar
 
-# Directories for persistent data (mount a volume here in production)
-RUN mkdir -p /app/data /app/uploads && chown -R appuser:appuser /app
+# Directory for persistent data (mount a single volume at /app/data in production;
+# set UPLOAD_DIR=/app/data/uploads as an env var so uploads live inside the same volume)
+RUN mkdir -p /app/data/uploads && chown -R appuser:appuser /app
 
 USER appuser
 
